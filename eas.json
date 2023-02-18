@@ -1,0 +1,60 @@
+/* PARA EXECUTAR O SCRIPT E GERAR APK ASSINADO:
+   (TO RUN THE SCRIPT AND GENERATE SIGNED APK:)
+
+   1. Gere uma chave de assinatura de APK com o seguinte comando:
+      (Generate an APK signing key with the following command:)
+      
+      keytool -genkey -v -keystore KEY_NAME_HERE.keystore -alias KEY_ALIAS_HERE -keyalg RSA -keysize 2048 -validity 10000
+
+
+      Obs.: Serão solicitadas algumas informações, incluindo senha. Anote tudo para não esquecer.
+            (You will be asked for some information, including a password. Write everything down so you don't forget.)
+
+   2. Instale o cliente EAS:
+      (Install the EAS client:)
+      
+      npm install --global eas-cli
+
+   3. Efetue login na sua conta na Expo:
+      (Log in to your Expo account:)
+
+      expo login
+
+   4. Execute o script eas.json em modo de produção:   
+      (Run the eas.json script in production mode:)
+
+      eas build -p android --profile production
+
+   5. O cliente EAS pode solicitar o caminho até o arquivo de chave de assinatura de APK gerado no Passo 1
+      (The EAS client may request the path to the APK signing key file generated in Step 1)
+      
+   6. O cliente EAS pode solicitar senha definida no Passo 1
+      (EAS client may ask you for password set in Step 1) 
+
+   7. Seu arquivo APK assinado estará no Painel da sua conta na Expo: https://expo.dev/ . Clique no Build finalizado e você será levado a uma página que conterá uma opção para download do arquivo.
+      (Your signed APK file will be in your Expo Account Dashboard: https://expo.dev/ . Click on the Finished Build and you will be taken to a page that will contain the option to download the file.)
+
+*/
+
+{
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  }
+}

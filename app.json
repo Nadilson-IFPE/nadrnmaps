@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#7552f3"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,11 +21,19 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#7552f3"
+      },
+      "package": "com.nadilson.nadrnmaps",
+      "versionCode": 1,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "71db7b17-61ce-492e-9fa8-4c819cc3db17"
+      }
     }
   }
 }

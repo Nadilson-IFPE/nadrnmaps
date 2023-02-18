@@ -1,96 +1,30 @@
-import {
-  getCurrentPositionAsync,
-  requestForegroundPermissionsAsync,
-  LocationObject,
-  watchPositionAsync,
-  LocationAccuracy,
-} from "expo-location";
-import { useEffect, useRef, useState } from "react";
-import { Platform, View } from "react-native";
-import MapView, {
-  Marker,
-  PROVIDER_DEFAULT,
-  PROVIDER_GOOGLE,
-} from "react-native-maps";
-import { styles } from "./styles";
+import React from "react";
+import HomeScreen from "./HomeScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [location, setLocation] = useState<LocationObject | null>(null);
-
-  const mapRef = useRef<MapView>(null);
-
-  async function requestLocationPermissions() {
-    const { granted } = await requestForegroundPermissionsAsync();
-
-    try {
-      if (granted) {
-        const currentPosition = await getCurrentPositionAsync();
-        setLocation(currentPosition);
-
-        //    console.log("LOCALIZAÇÃO ATUAL => ", currentPosition);
-      }
-    } catch (error) {
-      console.log("getCurrentPositionAsync error: ", error);
-    }
-  }
-
-  useEffect(() => {
-    try {
-      requestLocationPermissions();
-    } catch (error) {
-      console.log("requestLocationPermissions error: ", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      watchPositionAsync(
-        {
-          accuracy: LocationAccuracy.Highest,
-          timeInterval: 1000,
-          distanceInterval: 1,
-        },
-        (response) => {
-          //    console.log("NOVA LOCALIZAÇÃO: ", response);
-          setLocation(response);
-          mapRef.current?.animateCamera({
-            pitch: 70,
-            center: response.coords,
-          });
-        }
-      );
-    } catch (error) {
-      console.log("watchPositionAsync error: ", error);
-    }
-  }, []);
-
   return (
-    <View style={styles.container}>
-      {location && (
-        <MapView
-          provider={
-            Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
-          }
-          ref={mapRef}
-          style={styles.map}
-          initialRegion={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: "Onde estou?",
+            headerStyle: {
+              backgroundColor: "#7552f3",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
           }}
-          zoomEnabled={true}
-          showsUserLocation={true}
-        >
-          <Marker
-            coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            }}
-          />
-        </MapView>
-      )}
-    </View>
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
