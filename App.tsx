@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  getCurrentPositionAsync,
+  requestForegroundPermissionsAsync,
+  LocationObject,
+} from "expo-location";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
+import { styles } from "./styles";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [location, setLocation] = useState<LocationObject | null>(null);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  async function requestLocationPermissions() {
+    const { granted } = await requestForegroundPermissionsAsync();
+
+    if (granted) {
+      const currentPosition = await getCurrentPositionAsync();
+      setLocation(currentPosition);
+
+      console.log("LOCALIZAÇÃO ATUAL => ", currentPosition);
+    }
+  }
+
+  useEffect(() => {
+    requestLocationPermissions();
+  }, []);
+
+  return <View style={styles.container}></View>;
+}
