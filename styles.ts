@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -6,9 +6,12 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    ...StyleSheet.absoluteFillObject,
   },
   map: {
     flex: 1,
-    width: "100%",
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    ...StyleSheet.absoluteFillObject,
   },
 });

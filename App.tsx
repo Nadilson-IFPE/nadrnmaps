@@ -5,13 +5,19 @@ import {
   watchPositionAsync,
   LocationAccuracy,
 } from "expo-location";
-import { useEffect, useState } from "react";
-import { View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { useEffect, useRef, useState } from "react";
+import { Platform, View } from "react-native";
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { styles } from "./styles";
 
 export default function App() {
   const [location, setLocation] = useState<LocationObject | null>(null);
+
+  const mapRef = useRef<MapView>(null);
 
   async function requestLocationPermissions() {
     const { granted } = await requestForegroundPermissionsAsync();
@@ -21,7 +27,7 @@ export default function App() {
         const currentPosition = await getCurrentPositionAsync();
         setLocation(currentPosition);
 
-        console.log("LOCALIZAÇÃO ATUAL => ", currentPosition);
+        //    console.log("LOCALIZAÇÃO ATUAL => ", currentPosition);
       }
     } catch (error) {
       console.log("getCurrentPositionAsync error: ", error);
@@ -45,8 +51,12 @@ export default function App() {
           distanceInterval: 1,
         },
         (response) => {
-          console.log("NOVA LOCALIZAÇÃO: ", response);
+          //    console.log("NOVA LOCALIZAÇÃO: ", response);
           setLocation(response);
+          mapRef.current?.animateCamera({
+            pitch: 70,
+            center: response.coords,
+          });
         }
       );
     } catch (error) {
@@ -58,6 +68,10 @@ export default function App() {
     <View style={styles.container}>
       {location && (
         <MapView
+          provider={
+            Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+          }
+          ref={mapRef}
           style={styles.map}
           initialRegion={{
             latitude: location.coords.latitude,
@@ -65,6 +79,8 @@ export default function App() {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
+          zoomEnabled={true}
+          showsUserLocation={true}
         >
           <Marker
             coordinate={{
@@ -77,3 +93,5 @@ export default function App() {
     </View>
   );
 }
+
+// AppRegistry.registerComponent("App", () => App);
