@@ -5,6 +5,7 @@ import {
 } from "expo-location";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { styles } from "./styles";
 
 export default function App() {
@@ -25,5 +26,26 @@ export default function App() {
     requestLocationPermissions();
   }, []);
 
-  return <View style={styles.container}></View>;
+  return (
+    <View style={styles.container}>
+      {location && (
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          }}
+        >
+          <Marker
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+          />
+        </MapView>
+      )}
+    </View>
+  );
 }
